@@ -1,0 +1,51 @@
+import type { Language } from '../types.js';
+
+export interface PackageJsonOptions {
+  projectName: string;
+  language: Language;
+}
+
+interface PackageJsonContent {
+  name: string;
+  version: string;
+  scripts: Record<string, string>;
+  devDependencies: Record<string, string>;
+}
+
+export function generatePackageJson(options: PackageJsonOptions): string {
+  const { projectName, language } = options;
+
+  const baseConfig: PackageJsonContent = {
+    name: projectName,
+    version: '1.0.0',
+    scripts: {
+      push: 'clasp push',
+      open: 'clasp open',
+    },
+    devDependencies: {
+      '@google/clasp': '^2.4.2',
+      'cpy-cli': '^5.0.0',
+    },
+  };
+
+  if (language === 'typescript') {
+    baseConfig.scripts = {
+      build: 'tsc && cpy src/appsscript.json dist',
+      ...baseConfig.scripts,
+      deploy: 'npm run build && npm run push',
+    };
+    baseConfig.devDependencies = {
+      ...baseConfig.devDependencies,
+      'typescript': '^5.3.0',
+      '@types/google-apps-script': '^1.0.83',
+    };
+  } else {
+    baseConfig.scripts = {
+      build: "cpy 'src/**/*' dist",
+      ...baseConfig.scripts,
+      deploy: 'npm run build && npm run push',
+    };
+  }
+
+  return JSON.stringify(baseConfig, null, 2) + '\n';
+}
