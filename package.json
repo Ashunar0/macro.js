@@ -4,7 +4,7 @@
   "description": "Create GAS projects with clasp in one command",
   "type": "module",
   "bin": {
-    "create-macro": "./dist/index.js"
+    "create-macro": "dist/index.js"
   },
   "files": [
     "dist"
