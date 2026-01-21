@@ -19,9 +19,9 @@ export function generatePackageJson(options: PackageJsonOptions): string {
     name: projectName,
     version: '1.0.0',
     scripts: {
-      login: 'clasp login',
+      login: 'npx clasp login',
       push: 'node scripts/push.js',
-      open: 'clasp open',
+      open: 'npx clasp open',
     },
     devDependencies: {
       '@google/clasp': '^2.4.2',

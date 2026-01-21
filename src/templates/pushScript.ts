@@ -1,7 +1,7 @@
 export function generatePushScript(): string {
   return `const { spawn } = require('child_process');
 
-const proc = spawn('clasp', ['push'], { stdio: 'inherit', shell: true });
+const proc = spawn('npx', ['clasp', 'push'], { stdio: 'inherit', shell: true });
 
 proc.on('close', (code) => {
   if (code !== 0) {
