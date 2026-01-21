@@ -1,99 +1,101 @@
+[English](README.md) | [日本語](README.ja.md)
+
 # create-macro
 
-Google Apps Script (GAS) プロジェクトを素早くセットアップするCLIツール。
+A CLI tool for quickly setting up Google Apps Script (GAS) projects.
 
-## インストール
+## Installation
 
 ```bash
 npm create macro
 ```
 
-または
+or
 
 ```bash
 npx create-macro
 ```
 
-## 使い方
+## Usage
 
-### インタラクティブモード
+### Interactive Mode
 
 ```bash
 npm create macro
 ```
 
-プロンプトに従ってプロジェクトを設定:
+Follow the prompts to configure your project:
 
-1. プロジェクト名
-2. 言語 (TypeScript / JavaScript)
-3. GASプロジェクトを自動作成するか
-4. プロジェクトタイプ (standalone, sheets, docs, forms, slides, webapp)
+1. Project name
+2. Language (TypeScript / JavaScript)
+3. Whether to auto-create a GAS project
+4. Project type (standalone, sheets, docs, forms, slides, webapp)
 
-### 非インタラクティブモード
+### Non-Interactive Mode
 
 ```bash
 npm create macro my-project -- --yes
 ```
 
-デフォルト値でプロジェクトを作成:
-- 言語: TypeScript
-- GASプロジェクト作成: はい
-- プロジェクトタイプ: standalone
+Creates a project with default values:
+- Language: TypeScript
+- Create GAS project: Yes
+- Project type: standalone
 
-## オプション
+## Options
 
-| オプション | 短縮形 | 説明 |
-|-----------|--------|------|
-| `--yes` | `-y` | デフォルト値で全ての質問をスキップ |
-| `--help` | `-h` | ヘルプを表示 |
-| `--version` | `-v` | バージョンを表示 |
+| Option | Short | Description |
+|--------|-------|-------------|
+| `--yes` | `-y` | Skip all prompts with default values |
+| `--help` | `-h` | Show help |
+| `--version` | `-v` | Show version |
 
-## 生成されるファイル構成
+## Generated File Structure
 
 ```
 my-project/
 ├── src/
 │   ├── main.ts (or main.js)
 │   └── appsscript.json
-├── dist/           (ビルド後に生成)
+├── dist/           (generated after build)
 ├── .clasp.json
 ├── .gitignore
 ├── package.json
-└── tsconfig.json   (TypeScriptのみ)
+└── tsconfig.json   (TypeScript only)
 ```
 
-## ワークフロー
+## Workflow
 
 ```bash
-# プロジェクト作成
+# Create project
 npm create macro my-project
 
-# ディレクトリ移動
+# Change directory
 cd my-project
 
-# ビルド
+# Build
 npm run build
 
-# GASにプッシュ
+# Push to GAS
 npm run push
 
-# (オプション) ブラウザで開く
+# (Optional) Open in browser
 npm run open
 ```
 
-## 前提条件
+## Prerequisites
 
 - Node.js >= 18
 - clasp (`npm install -g @google/clasp`)
-- Googleアカウントでclaspにログイン済み (`clasp login`)
+- Logged in to clasp with Google account (`clasp login`)
 
-## GAS API の有効化
+## Enabling GAS API
 
-GASプロジェクトを自動作成する場合、Google Apps Script APIを有効にする必要があります:
+To auto-create GAS projects, you need to enable the Google Apps Script API:
 
-1. https://script.google.com/home/usersettings にアクセス
-2. 「Google Apps Script API」をオンにする
+1. Visit https://script.google.com/home/usersettings
+2. Turn on "Google Apps Script API"
 
-## ライセンス
+## License
 
 MIT
