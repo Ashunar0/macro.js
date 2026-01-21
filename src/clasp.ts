@@ -43,8 +43,21 @@ export async function checkLoginStatus(): Promise<boolean> {
 }
 
 export async function login(): Promise<boolean> {
-  const result = await runCommand('npx', ['clasp', 'login']);
-  return result.code === 0;
+  // Use inherit for stdio so user can see the URL and complete browser auth
+  return new Promise((resolve) => {
+    const proc = spawn('npx', ['clasp', 'login'], {
+      shell: true,
+      stdio: 'inherit',
+    });
+
+    proc.on('close', (code) => {
+      resolve(code === 0);
+    });
+
+    proc.on('error', () => {
+      resolve(false);
+    });
+  });
 }
 
 export function mapProjectTypeToClasp(type: ProjectType): string {
@@ -61,42 +74,52 @@ export async function createProject(
   cwd: string
 ): Promise<ClaspCreateResult> {
   const claspType = mapProjectTypeToClasp(type);
-  const result = await runCommand(
-    'npx',
-    ['clasp', 'create', '--type', claspType, '--title', `"${title}"`],
-    cwd
-  );
 
-  if (result.code === 0) {
-    // Extract scriptId from output or .clasp.json
-    // clasp create outputs something like "Created new standalone script"
-    // The scriptId is written to .clasp.json
-    return {
-      success: true,
-    };
-  }
+  return new Promise((resolve) => {
+    let output = '';
 
-  // Check for specific errors
-  const output = result.stdout + result.stderr;
+    const proc = spawn('npx', ['clasp', 'create', '--type', claspType, '--title', title], {
+      cwd,
+      shell: true,
+      stdio: ['inherit', 'pipe', 'pipe'],
+    });
 
-  if (output.includes('not logged in') || output.includes('Login required')) {
-    return {
-      success: false,
-      error: 'not_logged_in',
-    };
-  }
+    proc.stdout?.on('data', (data) => {
+      const text = data.toString();
+      output += text;
+      process.stdout.write(text);
+    });
 
-  if (output.includes('API') && output.includes('not enabled')) {
-    return {
-      success: false,
-      error: 'api_not_enabled',
-    };
-  }
+    proc.stderr?.on('data', (data) => {
+      const text = data.toString();
+      output += text;
+      process.stderr.write(text);
+    });
 
-  return {
-    success: false,
-    error: 'unknown',
-  };
+    proc.on('close', (code) => {
+      if (code === 0) {
+        resolve({ success: true });
+        return;
+      }
+
+      // Check for specific errors
+      if (output.includes('not logged in') || output.includes('Login required')) {
+        resolve({ success: false, error: 'not_logged_in' });
+        return;
+      }
+
+      if (output.includes('API') && output.includes('not enabled')) {
+        resolve({ success: false, error: 'api_not_enabled' });
+        return;
+      }
+
+      resolve({ success: false, error: 'unknown' });
+    });
+
+    proc.on('error', () => {
+      resolve({ success: false, error: 'unknown' });
+    });
+  });
 }
 
 export async function updateClaspJsonRootDir(projectPath: string): Promise<void> {
