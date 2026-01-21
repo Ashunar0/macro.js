@@ -19,7 +19,8 @@ export function generatePackageJson(options: PackageJsonOptions): string {
     name: projectName,
     version: '1.0.0',
     scripts: {
-      push: 'clasp push',
+      login: 'clasp login',
+      push: 'node scripts/push.js',
       open: 'clasp open',
     },
     devDependencies: {

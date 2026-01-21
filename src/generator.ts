@@ -8,6 +8,7 @@ import { generateAppsscript } from './templates/appsscript.js';
 import { generateGitignore } from './templates/gitignore.js';
 import { generateClaspJson } from './templates/clasp.js';
 import { generateMain, getMainFileName } from './templates/main.js';
+import { generatePushScript } from './templates/pushScript.js';
 
 export interface GeneratorContext {
   projectName: string;
@@ -31,6 +32,10 @@ export async function generateProject(
     // Create src directory
     const srcPath = join(projectPath, 'src');
     await ensureDir(srcPath);
+
+    // Create scripts directory
+    const scriptsPath = join(projectPath, 'scripts');
+    await ensureDir(scriptsPath);
 
     // Generate and write files
     await writeTemplateFiles({
@@ -82,6 +87,10 @@ async function writeTemplateFiles(ctx: GeneratorContext): Promise<void> {
 
   // .gitignore
   await writeFile(join(projectPath, '.gitignore'), generateGitignore());
+
+  // scripts/push.js
+  const scriptsPath = join(projectPath, 'scripts');
+  await writeFile(join(scriptsPath, 'push.js'), generatePushScript());
 }
 
 export async function writeClaspJson(

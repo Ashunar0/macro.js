@@ -116,10 +116,12 @@ describe('generatePackageJson', () => {
       const tsParsed = JSON.parse(tsContent);
       const jsParsed = JSON.parse(jsContent);
 
-      expect(tsParsed.scripts.push).toBe('clasp push');
+      expect(tsParsed.scripts.push).toBe('node scripts/push.js');
       expect(tsParsed.scripts.open).toBe('clasp open');
-      expect(jsParsed.scripts.push).toBe('clasp push');
+      expect(tsParsed.scripts.login).toBe('clasp login');
+      expect(jsParsed.scripts.push).toBe('node scripts/push.js');
       expect(jsParsed.scripts.open).toBe('clasp open');
+      expect(jsParsed.scripts.login).toBe('clasp login');
     });
 
     it('should have trailing newline', () => {
